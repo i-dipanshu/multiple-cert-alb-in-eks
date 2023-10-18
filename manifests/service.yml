@@ -14,3 +14,17 @@ spec:
     protocol: TCP
   selector: 
     app: django-todo-app
+
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-static-site-service
+spec:
+  selector:
+    app: nginx-static-site
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

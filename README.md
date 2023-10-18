@@ -117,6 +117,12 @@ Verify that the deployments are running.
 kubectl get deployment -n kube-system aws-load-balancer-controller
 ```
 
+Verify that an alb is created by the controller
+
+```sh
+aws elbv2 describe-load-balancers
+```
+
 ## 4. Configure Multiple cert on ALB ingress controller eks 
 
 #### Resources
@@ -124,6 +130,9 @@ kubectl get deployment -n kube-system aws-load-balancer-controller
 - Docs for multiple cert as arn - [refer](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/annotations/#certificate-arn)
 - Cert discovery if above arn is not described - [refer](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/cert_discovery/)
 
+
+## 5. Configure controller to use same alb for multiple ingress
+[Docs](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/annotations/#ingressgroup)
 
 
 ## Problems 

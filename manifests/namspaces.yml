@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  django-todo-app
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  static-landing-page

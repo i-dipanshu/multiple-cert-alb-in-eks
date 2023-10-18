@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: static-site-config
+  namespace: static-landing-page
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name static-landing-page.local;
+
+        location / {
+            root /usr/share/nginx/html;
+            index index.html;
+        }
+    }

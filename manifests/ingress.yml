@@ -5,18 +5,40 @@ metadata:
   namespace: django-todo-app
   annotations:
     # kubernetes.io/ingress.class: alb # deprecated 
+    # alb.ingress.kubernetes.io/group.name: # used to state that controller will use same alb for all the ingress that belongs to this group
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/scheme: internet-facing 
     # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:xxxxx:certificate/cert1,arn:aws:acm:us-west-2:xxxxx:certificate/cert2,arn:aws:acm:us-west-2:xxxxx:certificate/cert3
 spec:
   ingressClassName: alb # new way to define 
   rules:
-    - http:
+    - host: www.formativeminds.com
+      http:
         paths:
-          - path: /*
+          - path: /todos
             pathType: Prefix
             backend:
               service:
                 name: django-todo-app-svc
+                port:
+                  number: 80
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: static-site-ingress
+  namespace: static-landing-page
+spec:
+  rules:
+    - host: app.formativeminds.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: static-site-service
                 port:
                   number: 80
