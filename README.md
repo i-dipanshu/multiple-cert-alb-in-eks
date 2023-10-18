@@ -138,3 +138,7 @@ aws elbv2 describe-load-balancers
 ## Problems 
 1. Ingress controller is created but it doesn't create an alb 
     possible fix - [refer](https://repost.aws/questions/QUGNQwcRe4SU6BjhZYpHixXg/eks-aws-load-balancer-controller-ingress-created-but-the-alb-is-not)
+
+    fix that i used - refer to docs to see the which version of controller to depending on the k8s version
+    
+2.  Troubleshoot - [docs](https://repost.aws/knowledge-center/load-balancer-troubleshoot-creating) 
