@@ -4,6 +4,10 @@
 # venv
 myenv
 
+# vscode
+.vscode
+
+
 ### Django ###
 *.log
 *.pot
