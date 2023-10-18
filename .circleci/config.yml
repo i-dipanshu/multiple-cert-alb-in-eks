@@ -50,6 +50,10 @@ commands:
           cluster-name: << parameters.cluster-name >>
           install-kubectl: true
           aws-region: << parameters.aws-region >>
+      - run:
+          command: |
+            kubectl get services
+          name: Test cluster
 
 jobs:
   build_job:
