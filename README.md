@@ -131,7 +131,7 @@ aws elbv2 describe-load-balancers
 - Cert discovery if above arn is not described - [refer](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/cert_discovery/)
 
 
-## 5. Configure controller to use same alb for multiple ingress
+## 5. Configure Ingress controller to use same alb for multiple ingress resources
 [Docs](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/annotations/#ingressgroup)
 
 
