@@ -17,7 +17,7 @@ Install the below tools in your to local machine to interact with EKS
 
 ## 1. Create the EKS resources
 
-Now once we have all three required tools configured and ready to go, we can start to create our eks cluster. 
+Now once we have all three required tools configured and ready to go, we can start creating and configuring our eks cluster. 
 
 Pricing - [EKS](https://aws.amazon.com/eks/pricing/)
 
