@@ -47,21 +47,23 @@ oidc_id=$(aws eks describe-cluster --name $cluster_name --query "cluster.identit
 echo $oidc_id
 
 # Check for existing OIDC connector
-aws iam list-open-id-connect-providers | grep $oidc_id | cut -d "/" -f4aws iam list-open-id-connect-providers | grep $oidc_id | cut -d "/" -f4
+aws iam list-open-id-connect-providers | grep $oidc_id | cut -d "/" -f4
 
 # Create a new OIDC Connector, if there is no existing OIDC Connector 
 eksctl utils associate-iam-oidc-provider --cluster $cluster_name --approve
 ```
 
 ## 3. Create a ALB Add on 
-- [Docs](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html)
+- [Docs - AWS ](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html)
+
+- [Docs - Controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/deploy/installation/)
 
 - Application Load Balancing on Eks - [refer](https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html)
 
 #### Download IAM policy
 
 ```
-curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json
+curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.6.0/docs/install/iam_policy.json
 ```
 
 #### Create IAM Policy
@@ -101,8 +103,7 @@ helm repo update eks
 Install
 
 ```
-helm install aws-load-balancer-controller eks/aws-load-balancer-controller \            
-  -n kube-system \
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system \
   --set clusterName=<your-cluster-name> \
   --set serviceAccount.create=false \
   --set serviceAccount.name=aws-load-balancer-controller \
@@ -122,3 +123,9 @@ kubectl get deployment -n kube-system aws-load-balancer-controller
 - Feature introduced in [PR 818](https://github.com/kubernetes-sigs/aws-load-balancer-controller/pull/818)
 - Docs for multiple cert as arn - [refer](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/annotations/#certificate-arn)
 - Cert discovery if above arn is not described - [refer](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/cert_discovery/)
+
+
+
+## Problems 
+1. Ingress controller is created but it doesn't create an alb 
+    possible fix - [refer](https://repost.aws/questions/QUGNQwcRe4SU6BjhZYpHixXg/eks-aws-load-balancer-controller-ingress-created-but-the-alb-is-not)
