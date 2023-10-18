@@ -24,14 +24,16 @@ commands:
       - checkout
       - setup_remote_docker
       - docker/build:
-          dockerfile: Dockerfile
+          docker-context: <<parameters.dir>>
           path: <<parameters.dir>>
           image: $DOCKER_USER/<<pipeline.parameters.image-name>>
           tag: $CIRCLE_BUILD_NUM
 
   publish_image:
     steps:
-      - docker/check
+      - docker/check:
+          docker-password: DOCKER_PASS
+          docker-username: DOCKER_USER
       - docker/push:
           image: $DOCKER_USER/<<pipeline.parameters.image-name>>
           tag: $CIRCLE_BUILD_NUM
@@ -54,13 +56,13 @@ jobs:
     executor: docker/docker
     steps:
       - build_image:
-          dir: .
+          dir: todo
 
   publish_job:
     executor: docker/docker
     steps:
       - build_image:
-          dir: .
+          dir: todo
       - publish_image
 
   validate_and_configure_eks_job:
