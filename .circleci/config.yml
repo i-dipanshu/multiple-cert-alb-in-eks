@@ -89,7 +89,7 @@ workflows:
           cluster-name: $CLUSTER_NAME
           namespace: $NAMESPACE
           resource-name: $RESOURCE_NAME
-          container-image-updates: $CONTAINER_NAME=$DOCKER_USER/<<pipeline.parameters.image-name>>:$$CIRCLE_BUILD_NUM
+          container-image-updates: $CONTAINER_NAME=$DOCKER_USER/<<pipeline.parameters.image-name>>:$CIRCLE_BUILD_NUM
           requires:
             - publish_job
             # - validate_and_configure_eks_job
