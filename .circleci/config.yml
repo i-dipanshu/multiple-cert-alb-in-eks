@@ -1,0 +1,93 @@
+version: 2.1
+
+parameters:
+  image-name:
+    type: string
+    default: django-todo-app
+
+orbs:
+  docker: circleci/docker@2.4.0
+  aws-eks: circleci/aws-eks@2.2.0
+  kubernetes: circleci/kubernetes@1.3
+
+executors:
+  k8s_executor:
+    docker:
+      - image: cimg/python:3.10
+
+commands:
+  build_image:
+    parameters:
+      dir:
+        type: string
+    steps:
+      - checkout
+      - setup_remote_docker
+      - docker/build:
+          dockerfile: Dockerfile
+          path: <<parameters.dir>>
+          image: $DOCKER_USER/<<pipeline.parameters.image-name>>
+          tag: $CIRCLE_BUILD_NUM
+
+  publish_image:
+    steps:
+      - docker/check
+      - docker/push:
+          image: $DOCKER_USER/<<pipeline.parameters.image-name>>
+          tag: $CIRCLE_BUILD_NUM
+
+  validate_and_configure_eks:
+    parameters:
+      cluster-name:
+        type: string
+      aws-region:
+        type: string
+        default: ""
+    steps:
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+          install-kubectl: true
+          aws-region: << parameters.aws-region >>
+
+jobs:
+  build_job:
+    executor: docker/docker
+    steps:
+      - build_image:
+          dir: .
+
+  publish_job:
+    executor: docker/docker
+    steps:
+      - build_image:
+          dir: .
+      - publish_image
+
+  validate_and_configure_eks_job:
+    executor: k8s_executor
+    steps:
+      - validate_and_configure_eks:
+          cluster-name: $CLUSTER_NAME
+          aws-region: $AWS_REGION
+      
+
+workflows:
+  build_and_publish_workflow:
+    jobs:
+      - build_job:
+          filters:
+            branches:
+              ignore: main
+      - publish_job:
+          filters:
+            branches:
+              only: main
+      # - validate_and_configure_eks_job
+      - aws-eks/update-container-image:
+          cluster-name: $CLUSTER_NAME
+          namespace: $NAMESPACE
+          resource-name: $RESOURCE_NAME
+          container-image-updates: $CONTAINER_NAME=$DOCKER_USER/<<pipeline.parameters.image-name>>:$$CIRCLE_BUILD_NUM
+          requires:
+            - publish_job
+            # - validate_and_configure_eks_job
